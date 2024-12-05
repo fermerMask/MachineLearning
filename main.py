@@ -7,6 +7,7 @@ from PIL import Image, ImageOps
 import numpy as np
 
 import os
+os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 
 st.title("手書き文字認識")
 st.sidebar.header("モデルの選択")
@@ -16,7 +17,7 @@ if os.path.exists(model_dir):
     selected_model = st.sidebar.selectbox("使用するモデルを選択",model_files)
     if selected_model:
         model_path = os.path.join(model_dir, selected_model)
-        model = torch.load(model_path)
+        model = torch.load(model_path,map_location=torch.device("cpu"))
         st.sidebar.success(f"モデル{selected_model}が読み込まれました．")
     else:
         st.sidebar.error("モデルファイルが見つかりません．正しいパスを入力してください")
@@ -38,7 +39,7 @@ canvas_result = st_canvas(
 )
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-st.sidebar.info(f"デバイス:{'GPU' if device.type=="cuda" else 'CPU'}")
+st.sidebar.info(f"デバイス:{'GPU' if device.type == 'cuda' else 'CPU'}")
 model = model.to(device)
 
 if canvas_result.image_data is not None: 
