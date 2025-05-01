@@ -17,7 +17,7 @@ if os.path.exists(model_dir):
     selected_model = st.sidebar.selectbox("使用するモデルを選択",model_files)
     if selected_model:
         model_path = os.path.join(model_dir, selected_model)
-        model = torch.load(model_path,map_location=torch.device("cpu"))
+        model = torch.load(model_path,map_location=torch.device("cpu"),weights_only=False)
         st.sidebar.success(f"モデル{selected_model}が読み込まれました．")
     else:
         st.sidebar.error("モデルファイルが見つかりません．正しいパスを入力してください")
